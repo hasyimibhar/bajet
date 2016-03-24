@@ -3,6 +3,7 @@ package main
 import (
     "log"
     "net/http"
+    "html/template"
 
     "github.com/gorilla/mux"
     "github.com/gorilla/schema"
@@ -14,6 +15,11 @@ type Item struct {
 }
 
 var Items []Item
+
+func IndexHandler(w http.ResponseWriter, r *http.Request) {
+    t, _ := template.ParseFiles("public/index.html")
+    t.Execute(w, Items)
+}
 
 func AddItemHandler(w http.ResponseWriter, r *http.Request) {
     r.ParseForm()
@@ -32,6 +38,7 @@ func main() {
     Items = []Item{}
 
     r := mux.NewRouter()
+    r.HandleFunc("/", IndexHandler).Methods(http.MethodGet)
     r.HandleFunc("/items", AddItemHandler).Methods(http.MethodPost)
     r.PathPrefix("/").Handler(http.FileServer(http.Dir("./public/")))
 

@@ -9,6 +9,23 @@
   <link href="css/style.css" rel="stylesheet" media="all">
 </head>
 <body>
+  <table>
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th>Cost (RM)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{range .}}
+        <tr>
+          <td>{{.Description}}</td>
+          <td>{{.Cost}}</td>
+        </tr>
+      {{end}}
+    </tbody>
+  </table>
+
   <form method="post" action="/items">
     <input type="text" name="description" placeholder="Description" />
     RM <input type="number" name="cost" placeholder="0.00" />
