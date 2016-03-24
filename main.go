@@ -14,7 +14,17 @@ type Item struct {
     Cost        int
 }
 
-var Items []Item
+type ItemList []Item
+
+var Items ItemList
+
+func (items ItemList) TotalCost() int {
+    total := 0
+    for _, i := range items {
+        total += i.Cost
+    }
+    return total
+}
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
     t, _ := template.ParseFiles("public/index.html")
@@ -28,14 +38,14 @@ func AddItemHandler(w http.ResponseWriter, r *http.Request) {
     item := Item{}
     decoder.Decode(&item, r.PostForm)
 
-    Items = append(Items, []Item{item}...)
+    Items = append(Items, ItemList{item}...)
     log.Println("[TRACE] Items:", Items)
 
     http.Redirect(w, r, "/", http.StatusMovedPermanently)
 }
 
 func main() {
-    Items = []Item{}
+    Items = ItemList{}
 
     r := mux.NewRouter()
     r.HandleFunc("/", IndexHandler).Methods(http.MethodGet)
