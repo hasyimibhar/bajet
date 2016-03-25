@@ -1,6 +1,7 @@
 package main
 
 import (
+    "os"
     "log"
     "net/http"
     "html/template"
@@ -45,6 +46,12 @@ func AddItemHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+    port := os.Getenv("PORT")
+
+    if port == "" {
+        log.Fatal("$PORT must be set")
+    }
+
     Items = ItemList{}
 
     r := mux.NewRouter()
@@ -52,5 +59,5 @@ func main() {
     r.HandleFunc("/items", AddItemHandler).Methods(http.MethodPost)
     r.PathPrefix("/").Handler(http.FileServer(http.Dir("./public/")))
 
-    http.ListenAndServe(":8000", r)
+    http.ListenAndServe(":" + port, r)
 }
