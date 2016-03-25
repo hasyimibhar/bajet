@@ -3,7 +3,6 @@ package main
 import (
     "os"
     "log"
-    "fmt"
     "net/http"
     "html/template"
 
@@ -46,16 +45,13 @@ func AddItemHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
     port := os.Getenv("PORT")
-    dbUser := os.Getenv("DB_USER")
-    dbName := os.Getenv("DB_NAME")
-    dbPassword := os.Getenv("DB_PASSWORD")
+    databaseUrl := os.Getenv("DATABASE_URL")
 
     if port == "" {
         log.Fatalln("$PORT must be set")
     }
 
-    db, err := sqlx.Connect("postgres", fmt.Sprintf("user=%s dbname=%s password=%s sslmode=disable",
-        dbUser, dbName, dbPassword))
+    db, err := sqlx.Connect("postgres", databaseUrl)
     if err != nil {
         log.Fatalln(err)
     }
