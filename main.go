@@ -3,33 +3,28 @@ package main
 import (
     "os"
     "log"
+    "fmt"
     "net/http"
     "html/template"
 
+    _ "github.com/lib/pq"
     "github.com/gorilla/mux"
+    "github.com/jmoiron/sqlx"
     "github.com/gorilla/schema"
 )
 
-type Item struct {
-    Description string
-    Cost        int
-}
-
-type ItemList []Item
-
-var Items ItemList
-
-func (items ItemList) TotalCost() int {
-    total := 0
-    for _, i := range items {
-        total += i.Cost
-    }
-    return total
-}
+var Items ItemRepository
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
+    items, err := Items.All()
+    if err != nil {
+        log.Println("[ERROR]", err.Error())
+        w.Write([]byte(err.Error()))
+        return
+    }
+
     t, _ := template.ParseFiles("public/index.html")
-    t.Execute(w, Items)
+    t.Execute(w, items)
 }
 
 func AddItemHandler(w http.ResponseWriter, r *http.Request) {
@@ -39,20 +34,34 @@ func AddItemHandler(w http.ResponseWriter, r *http.Request) {
     item := Item{}
     decoder.Decode(&item, r.PostForm)
 
-    Items = append(Items, ItemList{item}...)
-    log.Println("[TRACE] Items:", Items)
+    err := Items.Create(item)
+    if err != nil {
+        log.Println("[ERROR]", err.Error())
+        w.Write([]byte(err.Error()))
+        return
+    }
 
     http.Redirect(w, r, "/", http.StatusMovedPermanently)
 }
 
 func main() {
     port := os.Getenv("PORT")
+    dbUser := os.Getenv("DB_USER")
+    dbName := os.Getenv("DB_NAME")
+    dbPassword := os.Getenv("DB_PASSWORD")
 
     if port == "" {
-        log.Fatal("$PORT must be set")
+        log.Fatalln("$PORT must be set")
     }
 
-    Items = ItemList{}
+    db, err := sqlx.Connect("postgres", fmt.Sprintf("user=%s dbname=%s password=%s sslmode=disable",
+        dbUser, dbName, dbPassword))
+    if err != nil {
+        log.Fatalln(err)
+    }
+
+    defer db.Close()
+    Items = &ItemRepo{db}
 
     r := mux.NewRouter()
     r.HandleFunc("/", IndexHandler).Methods(http.MethodGet)
