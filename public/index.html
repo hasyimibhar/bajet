@@ -24,8 +24,8 @@
         <tbody>
           {{range .}}
             <tr>
-              <td>{{.Description}}</td>
-              <td class="text-right item-cost">{{.Cost}}</td>
+              <td class="item-desc" id="item-desc-{{.Id}}">{{.Description}}</td>
+              <td class="text-right item-cost" id="item-cost-{{.Id}}">{{.Cost}}</td>
             </tr>
           {{end}}
         </tbody>
@@ -42,10 +42,10 @@
       <form method="post" action="/items">
         <div class="row">
           <div class="form-group">
-            <input class="form-control" type="text" name="description" placeholder="Description" />
+            <input class="form-control item-desc" type="text" name="description" placeholder="Description" />
           </div>
           <div class="form-group">
-            <input class="form-control item-cost" type="text" name="cost" value="0" />
+            <input class="form-control item-cost" type="text" name="cost" value="0.00" />
           </div>
         </div>
 
@@ -61,19 +61,33 @@
   <script src="/js/mindmup-editabletable.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
   <script type="text/javascript">
-    $('.item-list').editableTableWidget({editor: $('<input class="item-cost">')});
+    $('.item-list').editableTableWidget();
 
-    $('.item-cost').maskMoney({
-      thousands:',',
-      decimal:'.',
-      allowZero:true,
-      allowNegative:false
+    $('.item-list .item-desc').on('selected', function (evt, input) {
+      $(input).val($(this).html());
+      $(input).maskMoney('destroy');
+    });
+
+    $('.item-list .item-cost').on('selected', function (evt, input) {
+      $(input).maskMoney({
+        thousands:     ',',
+        decimal:       '.',
+        allowZero:     true,
+        allowNegative: false
+      });
     });
 
     $('.item-list .item-cost').each(function(i, e) {
       var val = $(e).html();
       $(e).html((parseFloat(val)).toFixed(2));
-    })
+    });
+
+    $('.add-item .item-cost').maskMoney({
+      thousands:     ',',
+      decimal:       '.',
+      allowZero:     true,
+      allowNegative: false
+    });
   </script>
 </body>
 </html>
