@@ -2,22 +2,24 @@ package main
 
 import (
     "time"
+
     "github.com/jmoiron/sqlx"
+    "github.com/shopspring/decimal"
 )
 
 type Item struct {
     Id          int
     Description string
-    Cost        int
+    Cost        decimal.Decimal
     Timestamp   time.Time
 }
 
 type ItemList []Item
 
-func (items ItemList) TotalCost() int {
-    total := 0
+func (items ItemList) TotalCost() decimal.Decimal {
+    total := decimal.NewFromFloat(0)
     for _, i := range items {
-        total += i.Cost
+        total = total.Add(i.Cost)
     }
     return total
 }

@@ -36,6 +36,10 @@
 			"ImportPath": "github.com/lib/pq/oid",
 			"Comment": "go1.0-cutoff-84-g3cd0097",
 			"Rev": "3cd0097429be7d611bb644ef85b42bfb102ceea4"
+		},
+		{
+			"ImportPath": "github.com/shopspring/decimal",
+			"Rev": "74d668a796fa3734c552fb907d9b83146d0bebee"
 		}
 	]
 }

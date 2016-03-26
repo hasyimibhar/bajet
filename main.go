@@ -3,6 +3,7 @@ package main
 import (
     "os"
     "log"
+    "reflect"
     "net/http"
     "html/template"
 
@@ -10,6 +11,7 @@ import (
     "github.com/gorilla/mux"
     "github.com/jmoiron/sqlx"
     "github.com/gorilla/schema"
+    "github.com/shopspring/decimal"
 )
 
 var Items ItemRepository
@@ -26,10 +28,19 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
     t.Execute(w, items)
 }
 
+func convertRm(value string) reflect.Value {
+    numberStr := []byte(value)[3:]
+    number, _ := decimal.NewFromString(string(numberStr))
+
+    return reflect.ValueOf(number)
+}
+
 func AddItemHandler(w http.ResponseWriter, r *http.Request) {
     r.ParseForm()
 
     decoder := schema.NewDecoder()
+    decoder.RegisterConverter(decimal.NewFromFloat(0), convertRm)
+
     item := Item{}
     decoder.Decode(&item, r.PostForm)
 

@@ -25,14 +25,14 @@
           {{range .}}
             <tr>
               <td>{{.Description}}</td>
-              <td class="text-center">{{.Cost}}</td>
+              <td class="text-center item-cost">{{.Cost}}</td>
             </tr>
           {{end}}
         </tbody>
         <tfoot>
           <tr>
             <th>Total</th>
-            <th class="text-center">{{.TotalCost}}</th>
+            <th class="text-center item-cost">{{.TotalCost}}</th>
           </tr>
         </tfoot>
       </table>
@@ -45,10 +45,7 @@
             <input class="form-control" type="text" name="description" placeholder="Description" />
           </div>
           <div class="form-group">
-            <div class="input-group">
-              <div class="input-group-addon">RM</div>
-              <input class="form-control" type="number" name="cost" placeholder="0" />
-            </div>
+            <input class="form-control item-cost" type="text" name="cost" value="0" />
           </div>
         </div>
 
@@ -62,8 +59,22 @@
   <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
   <script src="//code.jquery.com/jquery-migrate-1.3.0.min.js"></script>
   <script src="/js/mindmup-editabletable.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
   <script type="text/javascript">
-    $('.item-list').editableTableWidget();
+    $('.item-list').editableTableWidget({editor: $('<input class="item-cost">')});
+
+    $('.item-cost').maskMoney({
+      thousands:',',
+      decimal:'.',
+      allowZero:true,
+      allowNegative:false,
+      prefix: 'RM '
+    });
+
+    $('.item-list .item-cost').each(function(i, e) {
+      var val = $(e).html();
+      $(e).html("RM " + (parseFloat(val)).toFixed(2));
+    })
   </script>
 </body>
 </html>
