@@ -40,7 +40,7 @@ type ItemRepo struct {
 
 func (this *ItemRepo) All() (ItemList, error) {
     items := ItemList{}
-    err := this.db.Select(&items, "SELECT * FROM items")
+    err := this.db.Select(&items, "SELECT * FROM items ORDER BY id ASC")
     if err != nil {
         return ItemList{}, err
     }
