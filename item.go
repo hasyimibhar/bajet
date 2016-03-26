@@ -14,6 +14,10 @@ type Item struct {
     Timestamp   time.Time
 }
 
+func (item Item) CostString() string {
+    return item.Cost.StringFixed(2)
+}
+
 type ItemList []Item
 
 func (items ItemList) TotalCost() decimal.Decimal {

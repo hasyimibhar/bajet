@@ -25,7 +25,7 @@
           {{range .}}
             <tr item-id="{{.Id}}">
               <td class="item-desc">{{.Description}}</td>
-              <td class="text-right item-cost">{{.Cost}}</td>
+              <td class="text-right item-cost">{{.CostString}}</td>
             </tr>
           {{end}}
         </tbody>
@@ -85,11 +85,6 @@
       $.post( "/items/" + id, { 'description': desc, 'cost': cost }, function(data) {
         location.reload();
       });
-    });
-
-    $('.item-list .item-cost').each(function(i, e) {
-      var val = $(e).html();
-      $(e).html((parseFloat(val)).toFixed(2));
     });
 
     $('.add-item .item-cost').maskMoney({
