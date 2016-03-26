@@ -3,6 +3,7 @@ package main
 import (
     "os"
     "log"
+    "strings"
     "strconv"
     "reflect"
     "net/http"
@@ -30,7 +31,8 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func convertDecimal(value string) reflect.Value {
-    number, _ := decimal.NewFromString(value)
+
+    number, _ := decimal.NewFromString(strings.Replace(value, ",", "", -1))
     return reflect.ValueOf(number)
 }
 
