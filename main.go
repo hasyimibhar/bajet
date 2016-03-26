@@ -28,10 +28,8 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
     t.Execute(w, items)
 }
 
-func convertRm(value string) reflect.Value {
-    numberStr := []byte(value)[3:]
-    number, _ := decimal.NewFromString(string(numberStr))
-
+func convertDecimal(value string) reflect.Value {
+    number, _ := decimal.NewFromString(value)
     return reflect.ValueOf(number)
 }
 
@@ -39,7 +37,7 @@ func AddItemHandler(w http.ResponseWriter, r *http.Request) {
     r.ParseForm()
 
     decoder := schema.NewDecoder()
-    decoder.RegisterConverter(decimal.NewFromFloat(0), convertRm)
+    decoder.RegisterConverter(decimal.NewFromFloat(0), convertDecimal)
 
     item := Item{}
     decoder.Decode(&item, r.PostForm)

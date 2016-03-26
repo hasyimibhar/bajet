@@ -67,13 +67,12 @@
       thousands:',',
       decimal:'.',
       allowZero:true,
-      allowNegative:false,
-      prefix: 'RM '
+      allowNegative:false
     });
 
     $('.item-list .item-cost').each(function(i, e) {
       var val = $(e).html();
-      $(e).html("RM " + (parseFloat(val)).toFixed(2));
+      $(e).html((parseFloat(val)).toFixed(2));
     })
   </script>
 </body>
