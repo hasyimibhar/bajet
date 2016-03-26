@@ -5,3 +5,7 @@
 .item-cost {
     font-family: "Lucida Console", Monaco, monospace;
 }
+
+button {
+    border-radius: 0 !important;
+}
