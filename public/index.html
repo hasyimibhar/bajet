@@ -27,6 +27,21 @@
               <td class="text-right item-cost">{{.CostString}}</td>
             </tr>
           {{end}}
+          <form method="post" action="/items">
+            <tr class="add-item">
+              <td class="item-desc">
+                <input class="item-desc" type="text" name="description" placeholder="Add Item" />
+              </td>
+              <td class="text-right item-cost">
+                <input class="text-right item-cost" type="text" name="cost" placeholder="0.00" />
+              </td>
+            </tr>
+            <tr class="add-item">
+              <td colspan="2">
+                <button class="btn btn-success btn-block" type="submit">Add Item</button>
+              </td>
+            </tr>
+          </form>
         </tbody>
         <tfoot>
           <tr class="item">
@@ -35,23 +50,6 @@
           </tr>
         </tfoot>
       </table>
-    </div>
-
-    <div class="add-item">
-      <form method="post" action="/items">
-        <div class="row">
-          <div class="form-group">
-            <input class="form-control item-desc" type="text" name="description" placeholder="Description" />
-          </div>
-          <div class="form-group">
-            <input class="form-control item-cost" type="text" name="cost" value="0.00" />
-          </div>
-        </div>
-
-        <div class="row">
-          <button class="btn btn-success btn-block" type="submit">Add Item</button>
-        </div>
-      </form>
     </div>
   </div>
 
