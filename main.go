@@ -3,6 +3,7 @@ package main
 import (
     "os"
     "log"
+    "strconv"
     "reflect"
     "net/http"
     "html/template"
@@ -52,6 +53,25 @@ func AddItemHandler(w http.ResponseWriter, r *http.Request) {
     http.Redirect(w, r, "/", http.StatusMovedPermanently)
 }
 
+func UpdateItemHandler(w http.ResponseWriter, r *http.Request) {
+    vars := mux.Vars(r)
+    itemId, _ := strconv.Atoi(vars["id"])
+
+    r.ParseForm()
+
+    err := Items.Update(itemId, map[string]interface{}{
+        "description": r.PostFormValue("description"),
+        "cost":        r.PostFormValue("cost"),
+    })
+    if err != nil {
+        log.Println("[ERROR]", err.Error())
+        w.Write([]byte(err.Error()))
+        return
+    }
+
+    http.Redirect(w, r, "/", http.StatusMovedPermanently)
+}
+
 func main() {
     port := os.Getenv("PORT")
     databaseUrl := os.Getenv("DATABASE_URL")
@@ -71,6 +91,7 @@ func main() {
     r := mux.NewRouter()
     r.HandleFunc("/", IndexHandler).Methods(http.MethodGet)
     r.HandleFunc("/items", AddItemHandler).Methods(http.MethodPost)
+    r.HandleFunc("/items/{id:[0-9]+}", UpdateItemHandler).Methods(http.MethodPost)
     r.PathPrefix("/").Handler(http.FileServer(http.Dir("./public/")))
 
     http.ListenAndServe(":" + port, r)
