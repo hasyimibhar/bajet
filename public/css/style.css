@@ -1,3 +1,7 @@
 .add-item {
     margin: 6px;
 }
+
+.item-cost {
+    font-family: "Lucida Console", Monaco, monospace;
+}
