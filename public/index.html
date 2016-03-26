@@ -25,14 +25,14 @@
           {{range .}}
             <tr>
               <td>{{.Description}}</td>
-              <td class="text-center item-cost">{{.Cost}}</td>
+              <td class="text-right item-cost">{{.Cost}}</td>
             </tr>
           {{end}}
         </tbody>
         <tfoot>
           <tr>
             <th>Total</th>
-            <th class="text-center item-cost">{{.TotalCost}}</th>
+            <th class="text-right item-cost">{{.TotalCost}}</th>
           </tr>
         </tfoot>
       </table>
